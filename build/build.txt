@@ -1,0 +1,5 @@
+The built libraries will be stored and load in this directory. 
+in this directory you can build the library with the following commands
+
+cmake ..
+make
