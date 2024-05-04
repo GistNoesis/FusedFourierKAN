@@ -40,6 +40,28 @@ If cmake doesn't find torch, you should set TorchDir to the repository containin
 ```export Torch_DIR=folderContainingTorchConfig.cmake```
 then ```cmake ..``` should work
 
+Some users are encountering some build errors with recent g++ version. using g++-10 was suggested. (See https://github.com/GistNoesis/FusedFourierKAN/issues/1 )
+
+(My current versions, where it compiles and run fine are : 
+```
+g++ --version
+g++ (Ubuntu 9.4.0-1ubuntu1~20.04.2) 9.4.0
+```
+```
+nvcc --version
+nvcc: NVIDIA (R) Cuda compiler driver
+Copyright (c) 2005-2023 NVIDIA Corporation
+Built on Mon_Apr__3_17:16:06_PDT_2023
+Cuda compilation tools, release 12.1, V12.1.105
+Build cuda_12.1.r12.1/compiler.32688072_0
+```
+```
+import torch as th
+>>> th.__version__
+'2.2.1+cu121'
+```
+)
+
 # USAGE
 
 Once install is done successfully should be smooth.
