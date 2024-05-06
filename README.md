@@ -21,7 +21,7 @@ The GPU version is not optimized, but run in parallel and is deterministic, in p
 The structure and CMakeLists.txt allows for fast compilation time, that allows rapid iteration.
 
 # INSTALL
-Sorry it'll probably be painful. Only tested on linux
+Sorry it'll probably be painful. Only tested on linux, (although some users got it to work on windows with minor modifications to the loading path see https://github.com/GistNoesis/FusedFourierKAN/issues/3 )
 
 It still has rough edges but the happy path is the following : 
 ```
