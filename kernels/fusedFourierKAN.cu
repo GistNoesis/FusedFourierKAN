@@ -74,13 +74,13 @@ __global__ void ffkanGPUkernel_b(float *x, float *xb, float *coeff, float *coeff
 
     //These loops should be iterated backward according to autodiff, but if we assume (even if not true) commutativity and associativity of floating point addition 
     //we can iterate them in the nicer looking normal order
-    for( int i = 0 ; i < bs ; i++)
+    for( int  i = blockIdx.y ; i < bs ; i+=gridDim.y)
     for( int j = threadIdx.x ; j < inputdim ; j+=blockDim.x)
     {
     float xx =  x[i*s_bs_x+j];
     float c0 = cosf(xx); 
     float s0 = sinf(xx);
-    for( int l = 0 ; l < outputdim ; l++)
+    for( int l = blockIdx.x ; l < outputdim ; l+=gridDim.x)
     {
     float ckm = 1.0f;
     float skm = 0.0f;
@@ -103,11 +103,14 @@ __global__ void ffkanGPUkernel_b(float *x, float *xb, float *coeff, float *coeff
                         coeffb[s_d_coeff*1 + s_i_coeff*j + s_o_coeff*l + k-1] += s*outb[i*s_bs_out+l];
                         coeffb[s_d_coeff*0 + s_i_coeff*j + s_o_coeff*l + k-1] += c*outb[i*s_bs_out+l];
                     }
+                    if( partialx)
+                    {
                     sb = coeff[s_d_coeff*1 + s_i_coeff*j + s_o_coeff*l + k-1] * outb[i*s_bs_out+l];
                     cb = coeff[s_d_coeff*0 + s_i_coeff*j + s_o_coeff*l + k-1]*outb[i*s_bs_out+l];
                     xxb = k*c*sb - k*s*cb;
-                    if( partialx)
-                        xb[i*s_bs_x + j] += xxb;
+                    xb[i*s_bs_x + j] += xxb;
+                    }
+                    
                    }
     }
     }
@@ -119,9 +122,12 @@ void ffkanGPU_b(float *x, float *xb, float *coeff, float *coeffb, float *bias,
 {
 //Compute bias gradient
 ffkanGPUkernel_b<true,false,false><<<1, min(outputdim,1024) >>>(x,xb,coeff,coeffb,bias,biasb,bs,inputdim,outputdim,gridsize,out,outb);
-
-//Compute x and coeff gradient
-ffkanGPUkernel_b<false,true,true><<<1, min(inputdim,1024) >>>(x,xb,coeff,coeffb,bias,biasb,bs,inputdim,outputdim,gridsize,out,outb);
+dim3 gridDimX(1,min(bs,1024),1);
+//Compute x gradient
+ffkanGPUkernel_b<false,true,false><<<gridDimX, min(inputdim,1024) >>>(x,xb,coeff,coeffb,bias,biasb,bs,inputdim,outputdim,gridsize,out,outb);
+//Compute coeff gradient
+dim3 gridDimCoeff(min(outputdim,1024),1,1);
+ffkanGPUkernel_b<false,false,true><<<gridDimCoeff, min(inputdim,1024) >>>(x,xb,coeff,coeffb,bias,biasb,bs,inputdim,outputdim,gridsize,out,outb);
 
 
 }
