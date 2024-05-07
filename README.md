@@ -62,6 +62,19 @@ import torch as th
 ```
 )
 
+# Updating
+
+Updating is done by
+```
+git pull
+cd build
+(optional) cmake .. 
+make
+```
+If the python library was installed in editable mode, it should then be ok without needing to rerun ```pip install -e```
+
+The soft-convention for the "version" number in python library I'll try to follow is it that it won't be bumped up everytime there is a new "transparent" optimization that compute the same thing faster while giving the same results, but will be when there are significant changes, like order of dimensions.
+
 # USAGE
 
 Once install is done successfully should be smooth.
@@ -72,5 +85,13 @@ You can also call demo function
 from FusedFourierKAN.FusedFourierKANLayer import demo
 demo()
 ```
+
+# Benchmark and performance
+
+Some user has done an independant benchmark https://github.com/GistNoesis/FusedFourierKAN/issues/4
+
+I've pushed some performance optimization since.
+
+Official benchmark and more optimizations coming soon
 
 
