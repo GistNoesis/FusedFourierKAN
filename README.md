@@ -6,6 +6,8 @@ Code is proprietary non-commercial, for research purposes only.
 Contact us gistnoesis@gmail.com for commercial licenses.
 See LICENSE file for additional disclaimers.
 
+Some independant (faster and simpler to install) Apache-Licensed implementation of FusedFourierKan can be found here : https://github.com/Jerry-Master/KAN-benchmarking/tree/master/extra/kernel 
+
 # What is this about
 Writing a custom op allow to not materialize memory. Zero extra memory needed. In addition it also allows to do some trigonometric trick to compute cos(k*x) and sin(k*x) more efficiently.
 
